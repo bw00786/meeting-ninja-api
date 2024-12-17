@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-meeting-minutes-api
+  labels:
+    app: flask-meeting-minutes-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-meeting-minutes-api
+  template:
+    metadata:
+      labels:
+        app: flask-meeting-minutes-api
+    spec:
+      containers:
+      - name: flask-container
+        image: docker.io/bwilk84/flask-meeting-minutes-api:v5
+        ports:
+        - containerPort: 31000
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        env:
+          - name: PRIMARY_LLM_URL
+            value: "https://tarvos-sandbox.ssnc-corp.cloud/v1/chat/completions"
+          - name: BACKUP_LLM_URL
+            value: "http://10.111.194.93:8000/v1/completions"
+          - name: BACKUP_API_KEY
+            value: "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImJydWNlLndpbGtpbnNAc3NjaW5jLmNvbSIsImp0aSI6ImVudGl0eXRva2VuLTY2NWZhMWEyLTAzMzUtNGFjMS04ZjFkLWIxZGYzM2ExY2FjYyIsInN1YiI6InVzZXItZjFlY2EyYmEtN2RlYS00YjI3LThlY2QtNDM1YmEzMzcyZDE2IiwiaXNzIjoiY2xvdWQiLCJpYXQiOjE3MjYwNjE3NzcsImV4cCI6MTc1NzU2MzIwMH0.6LgWIgce8qtpyImJt8U9zwjExrF858aCfocCEPZUf3U"
+          - name: PRIMARY_LLM_API_KEY
+            value: "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImJydWNlLndpbGtpbnNAc3NjaW5jLmNvbSIsImp0aSI6ImVudGl0eXRva2VuLTY2NWZhMWEyLTAzMzUtNGFjMS04ZjFkLWIxZGYzM2ExY2FjYyIsInN1YiI6InVzZXItZjFlY2EyYmEtN2RlYS00YjI3LThlY2QtNDM1YmEzMzcyZDE2IiwiaXNzIjoiY2xvdWQiLCJpYXQiOjE3MjYwNjE3NzcsImV4cCI6MTc1NzU2MzIwMH0.6LgWIgce8qtpyImJt8U9zwjExrF858aCfocCEPZUf3U"
+          - name: PRIMARY_MODEL
+            value: "anthropic.claude-3-5-sonnet-20240620-v1:0"
+          - name: BACKUP_MODEL_NAME
+            value: "llama2-llm"
+          - name: UPLOAD_FOLDER
+            value: "/app/upload"
+          - name: OUTPUT_FOLDER
+            value: "/app/output"
+          - name: FLASK_PORT
+            value: "31000"
+

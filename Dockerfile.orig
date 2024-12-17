@@ -1,0 +1,26 @@
+FROM python:3.9-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+COPY requirements.txt /app/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /app/
+
+ENV LLM_URL="https://tarvos-sandbox.ssnc-corp.cloud/v1/chat/completions"
+ENV SSC_CLOUD_API_KEY="eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImJydWNlLndpbGtpbnNAc3NjaW5jLmNvbSIsImp0aSI6ImVudGl0eXRva2VuLTY2NWZhMWEyLTAzMzUtNGFjMS04ZjFkLWIxZGYzM2ExY2FjYyIsInN1YiI6InVzZXItZjFlY2EyYmEtN2RlYS00YjI3LThlY2QtNDM1YmEzMzcyZDE2IiwiaXNzIjoiY2xvdWQiLCJpYXQiOjE3MjYwNjE3NzcsImV4cCI6MTc1NzU2MzIwMH0.6LgWIgce8qtpyImJt8U9zwjExrF858aCfocCEPZUf3U"
+ENV MODEL_NAME="anthropic.claude-3-5-sonnet-20240620-v1:0"
+ENV UPLOAD_FOLDER="/app/upload"
+ENV OUTPUT_FOLDER="/app/output"
+ENV HTTP_PORT=32000
+
+EXPOSE 32000
+
+RUN mkdir -p /app/upload /app/output
+
+CMD ["python", "app.py"]
+
